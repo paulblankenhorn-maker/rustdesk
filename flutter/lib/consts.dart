@@ -209,6 +209,8 @@ const String kManagedAppKeyIdServer ="idServer";
 const String kManagedAppKeyRelayServer ="relayServer";
 const String kManagedAppKeyServerKey ="key";
 const String kManagedAppKeyId = "id";
+const String kShowScamWarning ="ShowScamWarning";
+const String kStartConnectionService = "startConnectionService";
 
 
 const String kWindowPrefix = "wm_";

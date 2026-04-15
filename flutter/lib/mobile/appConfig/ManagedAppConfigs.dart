@@ -20,7 +20,7 @@ class ManagedAppConfigs {
 
   Future<void> setConfigs(Map<String, dynamic>? managedAppConfig) async {
     // disabeling scam warning --> not needed for managed devices in a MDM system
-    bind.mainSetLocalOption(key: "show-scam-warning", value: "N");
+
 
     String idServer = "";
     String relayServer = "";
@@ -30,6 +30,8 @@ class ManagedAppConfigs {
       switch (key) {
         case kManagedAppKeyPassword:
           bind.mainSetPermanentPassword(password: value);
+          bind.mainSetOption(key: kOptionVerificationMethod, value: kUsePermanentPassword);
+          gFFI.serverModel.updatePasswordModel();
           break;
         case kManagedAppKeyIdServer:
           idServer = value;
@@ -43,17 +45,22 @@ class ManagedAppConfigs {
         case kManagedAppKeyId:
           bind.mainMdmSetId(newId: value);
           break;
-
+        case kShowScamWarning:
+          if(value=="false"){
+            bind.mainSetLocalOption(key: "show-scam-warning", value: "N");
+          }
+          break;
+        case kStartConnectionService:
+          if(value=="true"){
+            await gFFI.serverModel.startService();
+            bind.pluginSyncUi(syncTo: kAppTypeMain);
+            bind.pluginListReload();
+          }
+          break;
       }
     });
-    //start Service Right away
-    await gFFI.serverModel.startService();
-    bind.pluginSyncUi(syncTo: kAppTypeMain);
-    bind.pluginListReload();
-    //disable temporary password
-    bind.mainSetOption(key: kOptionVerificationMethod, value: kUsePermanentPassword);
-    gFFI.serverModel.updatePasswordModel();
-    //gFFI.serverModel.toggleInput();
+
+
     setServerConfigs(idServer, relayServer, serverKey);
 
   }
