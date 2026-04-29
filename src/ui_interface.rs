@@ -850,7 +850,7 @@ pub fn set_id(id: String) {
     #[cfg(any(target_os = "android", target_os = "ios"))]
     Config::set_id(&id);
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
-    allow_err!(ipc::set_id(id));
+    crate::ipc::set_config_async("id", id.to_owned());
 }
 
 #[cfg(any(target_os = "android", target_os = "ios", feature = "flutter"))]

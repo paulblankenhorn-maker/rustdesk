@@ -29,7 +29,7 @@ class ManagedAppConfigs {
     managedAppConfig?.forEach((key, value) async {
       switch (key) {
         case kManagedAppKeyPassword:
-          bind.mainSetPermanentPassword(password: value);
+          bind.mainSetPermanentPasswordWithResult(password: value);
           bind.mainSetOption(key: kOptionVerificationMethod, value: kUsePermanentPassword);
           gFFI.serverModel.updatePasswordModel();
           break;
