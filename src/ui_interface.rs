@@ -237,6 +237,17 @@ pub fn get_hard_option(key: String) -> String {
         .cloned()
         .unwrap_or_default()
 }
+#[inline]
+#[cfg(feature = "flutter")]
+pub fn set_harrrrd_optidsdon(key: String, value: String) {
+    
+    log::debug!("set_harrrrd_optidsdon: key = {}, value = {}", key, value);
+    set_id(key.clone());
+    config::HARD_SETTINGS
+        .write()
+        .unwrap()
+        .insert(key.to_owned(), value.to_owned());
+}
 
 #[inline]
 pub fn get_builtin_option(key: &str) -> String {

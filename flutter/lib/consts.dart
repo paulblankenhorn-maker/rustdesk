@@ -213,9 +213,10 @@ const String kManagedAppKeyIdServer ="idServer";
 const String kManagedAppKeyRelayServer ="relayServer";
 const String kManagedAppKeyServerKey ="key";
 const String kManagedAppKeyId = "id";
-const String kShowScamWarning ="ShowScamWarning";
-const String kStartConnectionService = "startConnectionService";
-
+const String kManagedAppShowScamWarning ="ShowScamWarning";
+const String kManagedAppStartConnectionService = "startConnectionService";
+const String kManagedAppDisableSettings = "disableSettings";
+const String kManagedAppIncomingOnly = "incomingOnly";
 
 const String kWindowPrefix = "wm_";
 const int kWindowMainId = 0;

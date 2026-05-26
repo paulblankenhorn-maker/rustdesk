@@ -8,6 +8,8 @@ import '../../models/server_model.dart';
 
 class ManagedAppConfigs {
 
+  static String id="";
+
   Future<void> loadConfigs() async {
     final managedConfig = ManagedConfigurations();
     final managedAppConfig = await managedConfig.getManagedConfigurations;
@@ -19,49 +21,46 @@ class ManagedAppConfigs {
   }
 
   Future<void> setConfigs(Map<String, dynamic>? managedAppConfig) async {
-    // disabeling scam warning --> not needed for managed devices in a MDM system
 
-
-    String idServer = "";
-    String relayServer = "";
-    String serverKey = "";
-
-    managedAppConfig?.forEach((key, value) async {
-      switch (key) {
-        case kManagedAppKeyPassword:
-          bind.mainSetPermanentPasswordWithResult(password: value);
-          bind.mainSetOption(key: kOptionVerificationMethod, value: kUsePermanentPassword);
-          gFFI.serverModel.updatePasswordModel();
-          break;
-        case kManagedAppKeyIdServer:
-          idServer = value;
-          break;
-        case kManagedAppKeyRelayServer:
-          relayServer = value;
-          break;
-        case kManagedAppKeyServerKey:
-          serverKey = value;
-          break;
-        case kManagedAppKeyId:
-          bind.mainMdmSetId(newId: value);
-          break;
-        case kShowScamWarning:
-          if(value=="false"){
-            bind.mainSetLocalOption(key: "show-scam-warning", value: "N");
-          }
-          break;
-        case kStartConnectionService:
-          if(value=="true"){
-            await gFFI.serverModel.startService();
-            bind.pluginSyncUi(syncTo: kAppTypeMain);
-            bind.pluginListReload();
-          }
-          break;
-      }
-    });
-
-
+    String idServer = managedAppConfig?.remove(kManagedAppKeyIdServer);
+    String relayServer = managedAppConfig?.remove(kManagedAppKeyRelayServer);
+    String serverKey = managedAppConfig?.remove(kManagedAppKeyServerKey);
     setServerConfigs(idServer, relayServer, serverKey);
+
+    String password = managedAppConfig?.remove(kManagedAppKeyPassword);
+    String id = managedAppConfig?.remove(kManagedAppKeyId);
+    if(password.isNotEmpty){
+      bind.mainSetPermanentPasswordWithResult(password: password);
+      bind.mainSetOption(key: kOptionVerificationMethod, value: kUsePermanentPassword);
+      gFFI.serverModel.updatePasswordModel();
+    }
+    if(id.isNotEmpty){
+      bind.mainMdmSetId(newId: id);
+      ManagedAppConfigs.id=id;
+    }
+    if("false"== managedAppConfig?.remove(kManagedAppShowScamWarning)){
+      // disabeling scam warning --> not needed for managed devices in a MDM system
+        bind.mainSetLocalOption(key: "show-scam-warning", value: "N");
+    }
+    if("true"== managedAppConfig?.remove(kManagedAppStartConnectionService)){
+      await gFFI.serverModel.startService();
+      bind.pluginSyncUi(syncTo: kAppTypeMain);
+      bind.pluginListReload();
+    }
+    if("true"== managedAppConfig?.remove(kManagedAppDisableSettings)){
+      bind.setHarrrrdOptidsdon(key: "disable-settings", value: "Y");
+    }else{
+      bind.setHarrrrdOptidsdon(key: "disable-settings", value: "N");
+    }
+    if("true"== managedAppConfig?.remove(kManagedAppIncomingOnly)){
+      bind.setHarrrrdOptidsdon(key: "conn-type", value: "incoming");
+    }else {
+      bind.setHarrrrdOptidsdon(key: "conn-type", value: "");
+    }
+
+    //for all settings that are not accessable in the flutter code
+
+
 
   }
   Future<void> setServerConfigs(String idServer,String relayServer,String serverKey) async {

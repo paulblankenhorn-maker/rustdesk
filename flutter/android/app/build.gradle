@@ -1,5 +1,8 @@
 import com.google.protobuf.gradle.*
 import groovy.json.JsonSlurper
+import java.util.Properties
+import java.io.FileInputStream
+
 
 plugins {
     id "com.google.protobuf" version "0.9.4"
@@ -108,6 +111,8 @@ android {
       release {
         keyAlias keystoreProperties['keyAlias']
         keyPassword keystoreProperties['keyPassword']
+          //
+          // storeFile = keystoreProperties["storeFile"]?.let { file(it) }
         storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
         storePassword keystoreProperties['storePassword']
       }

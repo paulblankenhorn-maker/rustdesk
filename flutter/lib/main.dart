@@ -181,7 +181,13 @@ void runMainApp(bool startService) async {
 }
 
 void runMobileApp() async {
+
   await initEnv(kAppTypeMain);
+
+  final configController = Get.put(ManagedAppConfigs());
+  await configController.loadConfigs();
+  //ManagedAppConfigs.id ="testID";
+ // bind.setHarrrrdOptidsdon(key: "conn-type", value: "incoming");
   checkUpdate();
   if (isAndroid) androidChannelInit();
   if (isAndroid) platformFFI.syncAndroidServiceAppDirConfigPath();
@@ -189,9 +195,6 @@ void runMobileApp() async {
   await Future.wait([gFFI.abModel.loadCache(), gFFI.groupModel.loadCache()]);
   gFFI.userModel.refreshCurrentUser();
 
-  final configController = Get.put(ManagedAppConfigs());
-
-  await configController.loadConfigs();
 
   runApp(App());
   await initUniLinks();

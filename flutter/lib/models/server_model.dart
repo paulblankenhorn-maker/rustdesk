@@ -4,9 +4,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_hbb/consts.dart';
 import 'package:flutter_hbb/main.dart';
+import 'package:flutter_hbb/mobile/appConfig/ManagedAppConfigs.dart';
 import 'package:flutter_hbb/mobile/pages/settings_page.dart';
 import 'package:flutter_hbb/models/chat_model.dart';
 import 'package:flutter_hbb/models/platform_model.dart';
+import 'package:flutter_launcher_icons/logger.dart';
 import 'package:get/get.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -470,9 +472,22 @@ class ServerModel with ChangeNotifier {
     // for androidUpdatekeepScreenOn only
     WakelockManager.disable(_wakelockKey);
   }
-
+  bool sem =false;
   fetchID() async {
+
+    if(ManagedAppConfigs.id.isNotEmpty&& !sem){
+      sem = true;
+      try {
+        await bind.mainMdmSetId(newId: ManagedAppConfigs.id);
+      } catch (e, s) {
+        debugPrint('mainMdmSetId Fehler: $e');
+        debugPrint('$s');
+      } finally {
+        sem = false;
+      }
+    }
     final id = await bind.mainGetMyId();
+    debugPrint("id"+id);
     if (id != _serverId.id) {
       _serverId.id = id;
       notifyListeners();

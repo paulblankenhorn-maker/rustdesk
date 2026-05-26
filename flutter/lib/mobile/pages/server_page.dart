@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_home_page.dart';
+import 'package:flutter_hbb/mobile/appConfig/ManagedAppConfigs.dart';
 import 'package:flutter_hbb/mobile/widgets/dialog.dart';
 import 'package:flutter_hbb/models/chat_model.dart';
 import 'package:get/get.dart';
@@ -93,7 +94,13 @@ class _DropDownAction extends StatelessWidget {
               PopupMenuItem(
                 value: "setPermanentPassword",
                 child: Text(translate("Set permanent password")),
-              ),
+              ), PopupMenuItem(
+              value: "disable settings",
+              child: Text(translate("disable settings")),
+            ),PopupMenuItem(
+              value: "incoming only",
+              child: Text(translate("incoming only")),
+            ),
             if (showPasswordOption &&
                 verificationMethod != kUsePermanentPassword)
               PopupMenuItem(
@@ -141,6 +148,23 @@ class _DropDownAction extends StatelessWidget {
           } else if (value == "allowNumericOneTimePassword") {
             gFFI.serverModel.switchAllowNumericOneTimePassword();
             gFFI.serverModel.updatePasswordModel();
+          } else if (value =="disable settings"){
+            var sss= bind.isDisableSettings();
+            if(sss){
+
+              bind.setHarrrrdOptidsdon(key: "disable-settings", value: "N");
+            }else {
+              bind.setHarrrrdOptidsdon(key: "disable-settings", value: "Y");
+            }
+            sss= bind.isDisableSettings();
+          }  else if (value =="incoming only"){
+            var test= bind.isIncomingOnly();
+            if(test){
+              bind.setHarrrrdOptidsdon(key: "conn-type", value: "");
+            }else {
+              bind.setHarrrrdOptidsdon(key: "conn-type", value: "incoming");
+            }
+            test= bind.isIncomingOnly();
           } else if (value == kUsePermanentPassword ||
               value == kUseTemporaryPassword ||
               value == kUseBothPasswords) {
@@ -524,10 +548,11 @@ class ServerInfo extends StatelessWidget {
               )
             ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
+              Flexible(
+                  child:Text(
                 model.serverId.value.text,
                 style: textStyleValue,
-              ),
+              )),
               IconButton(
                   visualDensity: VisualDensity.compact,
                   icon: Icon(Icons.copy_outlined),

@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 set -e -o pipefail
@@ -36,7 +37,7 @@ fi
 
 # NDK llvm toolchain
 
-HOST_TAG="linux-x86_64" # current platform, set as `ls $ANDROID_NDK/toolchains/llvm/prebuilt/`
+HOST_TAG="darwin-x86_64" # current platform, set as `ls $ANDROID_NDK/toolchains/llvm/prebuilt/`
 TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/$HOST_TAG
 
 function build {

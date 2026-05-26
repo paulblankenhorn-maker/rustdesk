@@ -1019,7 +1019,13 @@ pub fn main_set_options(json: String) {
         set_options(map)
     }
 }
-
+pub fn set_harrrrd_optidsdon(key: String, value: String) {
+     config::HARD_SETTINGS
+        .write()
+        .unwrap()
+        .insert(key.to_owned(), value.to_owned());
+    set_harrrrd_optidsdon(key, value)
+}
 
 pub fn main_test_if_valid_server(server: String, test_with_proxy: bool) -> String {
     test_if_valid_server(server, test_with_proxy)
